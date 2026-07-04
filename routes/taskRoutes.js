@@ -8,8 +8,6 @@ const {
   updateTask,
   deleteTask
 } = require("../controllers/taskController");
-const { body } = require('express-validator');
-
 
 /**
  * @swagger
@@ -40,15 +38,19 @@ const { body } = require('express-validator');
  *                 example: Complete assignment
  *               description:
  *                 type: string
- *                 example: Finish API project
+ *                 example: Finish Node.js REST API project
  *               status:
  *                 type: string
  *                 example: pending
  *     responses:
  *       201:
  *         description: Task created successfully
+ *       400:
+ *         description: Validation error
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Server error
  */
 router.post("/", authMiddleware, createTask);
 
@@ -56,7 +58,7 @@ router.post("/", authMiddleware, createTask);
  * @swagger
  * /api/tasks:
  *   get:
- *     summary: Get all tasks for logged-in user
+ *     summary: Get all tasks of logged-in user
  *     tags: [Tasks]
  *     security:
  *       - bearerAuth: []
@@ -66,21 +68,28 @@ router.post("/", authMiddleware, createTask);
  *         schema:
  *           type: integer
  *         example: 1
+ *         description: Page number
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
  *         example: 5
+ *         description: Number of tasks per page
  *       - in: query
  *         name: status
  *         schema:
  *           type: string
  *         example: pending
+ *         description: Filter tasks by status
  *     responses:
  *       200:
  *         description: List of tasks
+ *       400:
+ *         description: Invalid status
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Server error
  */
 router.get("/", authMiddleware, getTasks);
 
@@ -99,27 +108,38 @@ router.get("/", authMiddleware, getTasks);
  *         schema:
  *           type: integer
  *         example: 1
+ *         description: Task ID
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - title
+ *               - description
+ *               - status
  *             properties:
  *               title:
  *                 type: string
- *                 example: Updated task
+ *                 example: Updated assignment task
  *               description:
  *                 type: string
- *                 example: Updated description
+ *                 example: Swagger and README completed
  *               status:
  *                 type: string
  *                 example: completed
  *     responses:
  *       200:
- *         description: Task updated
+ *         description: Task updated successfully
+ *       400:
+ *         description: Validation error
+ *       401:
+ *         description: Unauthorized
  *       404:
  *         description: Task not found
+ *       500:
+ *         description: Server error
  */
 router.put("/:id", authMiddleware, updateTask);
 
@@ -138,11 +158,16 @@ router.put("/:id", authMiddleware, updateTask);
  *         schema:
  *           type: integer
  *         example: 1
+ *         description: Task ID
  *     responses:
  *       200:
- *         description: Task deleted
+ *         description: Task deleted successfully
+ *       401:
+ *         description: Unauthorized
  *       404:
  *         description: Task not found
+ *       500:
+ *         description: Server error
  */
 router.delete("/:id", authMiddleware, deleteTask);
 

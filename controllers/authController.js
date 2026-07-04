@@ -1,99 +1,112 @@
-const db = require('../config/db');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { validationResult } = require('express-validator');
+const db = require("../config/db");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
+const isValidEmail = (email) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
 
-const register = async (req, res) => {
-
-  // Step 1: Check if validation passed (from route-level validators)
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  // Step 2: Extract fields from request body
-  const { name, email, password } = req.body;
-
+exports.register = async (req, res) => {
   try {
-    // Step 3: Check if email is already registered
-    const [existing] = await db.query(
-      'SELECT id FROM users WHERE email = ?',
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        message: "Name, email and password are required"
+      });
+    }
+
+    if (!isValidEmail(email)) {
+      return res.status(400).json({
+        message: "Invalid email format"
+      });
+    }
+
+    const [existingUser] = await db.query(
+      "SELECT * FROM users WHERE email = ?",
       [email]
     );
 
-    if (existing.length > 0) {
-      return res.status(400).json({ message: 'Email already registered' });
+    if (existingUser.length > 0) {
+      return res.status(400).json({
+        message: "Email already registered"
+      });
     }
 
-   
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Step 5: Insert user into database
     await db.query(
-      'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
+      "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
       [name, email, hashedPassword]
     );
 
-    // Step 6: Send success response
-    res.status(201).json({ message: 'User registered successfully' });
-
+    return res.status(201).json({
+      message: "User registered successfully"
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message
+    });
   }
 };
 
-
-
-const login = async (req, res) => {
-
-  // Step 1: Check validation
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const { email, password } = req.body;
-
+exports.login = async (req, res) => {
   try {
-    // Step 2: Find user by email
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email and password are required"
+      });
+    }
+
+    if (!isValidEmail(email)) {
+      return res.status(400).json({
+        message: "Invalid email format"
+      });
+    }
+
     const [users] = await db.query(
-      'SELECT * FROM users WHERE email = ?',
+      "SELECT * FROM users WHERE email = ?",
       [email]
     );
 
-    // If no user found, send generic error (don't reveal which field is wrong)
     if (users.length === 0) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+      return res.status(401).json({
+        message: "Invalid email or password"
+      });
     }
 
     const user = users[0];
 
-    // Step 3: Compare the entered password with the hashed one in DB
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordMatch) {
+      return res.status(401).json({
+        message: "Invalid email or password"
+      });
     }
 
-   
     const token = jwt.sign(
-      { id: user.id, email: user.email },
+      {
+        id: user.id,
+        email: user.email
+      },
       process.env.JWT_SECRET,
-      { expiresIn: '24h' }
+      {
+        expiresIn: "1d"
+      }
     );
 
-   
-    res.status(200).json({
-      message: 'Login successful',
-      token,
-      user: { id: user.id, name: user.name, email: user.email }
+    return res.status(200).json({
+      message: "Login successful",
+      token
     });
-
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message
+    });
   }
 };
-
-module.exports = { register, login };
