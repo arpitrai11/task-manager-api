@@ -1,4 +1,5 @@
 const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUi = require('swagger-ui-express');
 
 const options = {
   definition: {
@@ -22,10 +23,10 @@ const options = {
         }
       }
     }
+    
   },
   apis: ["./routes/*.js"]
 };
-
 const swaggerSpec = swaggerJsdoc(options);
-
-module.exports = swaggerSpec;
+module.exports = { swaggerUi, swaggerSpec };
+module.exports = swaggerJsdoc(options);

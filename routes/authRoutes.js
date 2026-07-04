@@ -43,7 +43,7 @@ const {
  *       201:
  *         description: User registered successfully
  *       400:
- *         description: Validation error or email already exists
+ *         description: Validation error or duplicate email
  *       500:
  *         description: Server error
  */
@@ -53,7 +53,7 @@ router.post("/register", register);
  * @swagger
  * /api/auth/login:
  *   post:
- *     summary: Login user and get token
+ *     summary: Login user and return JWT token
  *     tags: [Auth]
  *     requestBody:
  *       required: true

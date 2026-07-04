@@ -1,14 +1,14 @@
 {
   "name": "task_manager_api",
   "version": "1.0.0",
-  "description": "User and task management REST API using Node.js, Express.js, MySQL, JWT and Swagger",
+  "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
-  },
+  "start": "node server.js",
+  "dev": "nodemon server.js"
+},
   "keywords": [],
-  "author": "Arpit Rai",
+  "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
