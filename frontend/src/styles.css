@@ -1,0 +1,29 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #0f172a;
+  background: #f8fafc;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: #f8fafc; }
+button, input { font: inherit; }
+
+.app-shell { max-width: 980px; margin: 0 auto; padding: 24px; }
+.app-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08); }
+auth-card { display: block; }
+.task-card { margin-top: 20px; }
+.auth-toggle { display: flex; gap: 8px; margin-bottom: 12px; }
+auth-toggle button { border: 1px solid #cbd5e1; background: #f8fafc; padding: 8px 12px; border-radius: 999px; }
+auth-toggle button.active { background: #2563eb; color: white; }
+.auth-form, .task-form { display: flex; flex-direction: column; gap: 10px; }
+input { border: 1px solid #cbd5e1; padding: 10px 12px; border-radius: 10px; }
+.primary-btn, .secondary-btn, .danger-btn { border: none; padding: 10px 14px; border-radius: 10px; cursor: pointer; }
+.primary-btn { background: #2563eb; color: white; }
+.secondary-btn { background: #e2e8f0; color: #0f172a; }
+.danger-btn { background: #fee2e2; color: #b91c1c; }
+.error-box { background: #fee2e2; color: #b91c1c; padding: 10px 12px; border-radius: 10px; margin-bottom: 12px; }
+.task-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+.task-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid #e2e8f0; border-radius: 12px; }
+.task-item.done span { text-decoration: line-through; color: #64748b; }
+.task-actions { display: flex; gap: 10px; align-items: center; }

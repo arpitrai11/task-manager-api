@@ -1,0 +1,27 @@
+{
+  "name": "task_manager_api",
+  "version": "1.0.0",
+  "description": "Task management REST API with MySQL, Sequelize and JWT",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "Arpit Rai",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.0",
+    "express": "^5.2.1",
+    "google-auth-library": "^9.15.1",
+    "jsonwebtoken": "^9.0.1",
+    "mysql2": "^3.6.0",
+    "sequelize": "^6.9.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
